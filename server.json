@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.trendsmcp/trends-mcp",
+  "title": "Trends MCP",
+  "description": "Live trend data from Google, YouTube, TikTok, Reddit, Amazon, Wikipedia, npm, Steam and more",
+  "version": "1.0.0",
+  "websiteUrl": "https://trendsmcp.ai",
+  "repository": {
+    "url": "https://github.com/trendsmcp-ai/Trends-MCP",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://www.trendsmcp.ai/static/pages/trendsmcp/assets/trend.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.trendsmcp.ai/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token. Get your free API key at https://trendsmcp.ai",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
