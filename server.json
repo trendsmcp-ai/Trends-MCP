@@ -1,9 +1,9 @@
-{
+﻿{
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "ai.trendsmcp/trends-mcp",
+  "name": "ai.trendsmcp/trends",
   "title": "Trends MCP",
-  "description": "Live trend data from Google, YouTube, TikTok, Reddit, Amazon, Wikipedia, npm, Steam and more",
-  "version": "1.0.0",
+  "description": "Live cross-platform trend data for AI: Google, TikTok, Reddit, Amazon, YouTube and more",
+  "version": "1.0.6",
   "websiteUrl": "https://trendsmcp.ai",
   "repository": {
     "url": "https://github.com/trendsmcp-ai/Trends-MCP",

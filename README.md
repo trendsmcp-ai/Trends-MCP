@@ -13,7 +13,7 @@ Google Search · YouTube · TikTok · Reddit · Amazon · Wikipedia · X · News
 [![Smithery](https://img.shields.io/badge/Smithery-listed-8A2BE2)](https://smithery.ai/servers/trendsmcp/trends-mcp)
 [![API calls served](https://img.shields.io/badge/API%20calls%20served-4.1M%2B-brightgreen)](https://trendsmcp.ai)
 [![Free tier](https://img.shields.io/badge/Free%20tier-100%20req%2Fmo-orange)](https://trendsmcp.ai?utm_source=github&utm_medium=readme&utm_campaign=badges)
-[![GitHub stars](https://img.shields.io/github/stars/trendsmcp/trends-mcp?style=social)](https://github.com/trendsmcp/trends-mcp/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/trendsmcp-ai/Trends-MCP?style=social)](https://github.com/trendsmcp-ai/Trends-MCP/stargazers)
 
 [**Get a free API key →**](https://trendsmcp.ai?utm_source=github&utm_medium=readme&utm_campaign=hero) &nbsp;·&nbsp; [Docs](https://trendsmcp.ai/docs) &nbsp;·&nbsp; [Data Sources](https://trendsmcp.ai/data-sources) &nbsp;·&nbsp; [Use Cases](https://trendsmcp.ai/use-cases)
 
@@ -62,7 +62,7 @@ One MCP endpoint replaces per-platform API keys, brittle scrapers (looking at yo
 Or paste the config:
 
 <details open>
-<summary><b>Cursor / Windsurf / Cline</b> — <code>~/.cursor/mcp.json</code></summary>
+<summary><b>Cursor / Windsurf</b> - <code>~/.cursor/mcp.json</code></summary>
 
 ```json
 {
@@ -71,6 +71,23 @@ Or paste the config:
       "url": "https://api.trendsmcp.ai/mcp",
       "transport": "http",
       "headers": { "Authorization": "Bearer YOUR_API_KEY" }
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Cline</b> - see <code>llms-install.md</code> (requires <code>streamableHttp</code>)</summary>
+
+```json
+{
+  "mcpServers": {
+    "trends-mcp": {
+      "type": "streamableHttp",
+      "url": "https://api.trendsmcp.ai/mcp",
+      "headers": { "Authorization": "Bearer YOUR_API_KEY" },
+      "disabled": false
     }
   }
 }
