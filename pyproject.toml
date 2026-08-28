@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "trends-mcp"
+version = "1.0.7"
+description = "Stdio MCP server for Trends MCP. Forwards tool calls to api.trendsmcp.ai with your API key."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Trends MCP", email = "hello@trendsmcp.ai" }]
+dependencies = [
+  "mcp>=1.12.0,<2",
+  "httpx>=0.24.0",
+]
+
+[project.scripts]
+trends-mcp = "trends_mcp_server:main"
+
+[project.urls]
+Homepage = "https://trendsmcp.ai"
+Documentation = "https://trendsmcp.ai/docs"
+Repository = "https://github.com/trendsmcp-ai/Trends-MCP"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/trends_mcp_server"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/trends_mcp_server" = "trends_mcp_server"

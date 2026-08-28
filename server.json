@@ -3,7 +3,7 @@
   "name": "ai.trendsmcp/trends",
   "title": "Trends MCP",
   "description": "Live cross-platform trend data for AI: Google, TikTok, Reddit, Amazon, YouTube and more",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "websiteUrl": "https://trendsmcp.ai",
   "repository": {
     "url": "https://github.com/trendsmcp-ai/Trends-MCP",

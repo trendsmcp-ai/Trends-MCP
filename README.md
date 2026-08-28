@@ -138,6 +138,26 @@ https://www.trendsmcp.ai/mcp
 ```
 </details>
 
+<details>
+<summary><b>Stdio (Claude Desktop / Glama)</b> — local process, same API key and billing</summary>
+
+Hosted HTTP is still the usual install. This stdio adapter is for Glama and clients that start a local process. It lists tools without a key; data calls need `TRENDSMCP_API_KEY`.
+
+```json
+{
+  "mcpServers": {
+    "trends-mcp": {
+      "command": "python",
+      "args": ["-m", "trends_mcp_server"],
+      "env": { "TRENDSMCP_API_KEY": "YOUR_API_KEY" }
+    }
+  }
+}
+```
+
+From this repo: `pip install -e .` then `python -m trends_mcp_server`.
+</details>
+
 **3.** Ask your AI:
 
 ```
