@@ -17,10 +17,6 @@ Live trend data for AI agents. Google, TikTok, YouTube, Amazon, Reddit, and 30+ 
 
 [Get a free API key](https://www.trendsmcp.ai/account) · [Docs](https://www.trendsmcp.ai/docs) · [Pricing](https://www.trendsmcp.ai/pricing) · [Data sources](https://www.trendsmcp.ai/data-sources) · [PyPI](https://pypi.org/project/trends-mcp-server/) · [Glama](https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP)
 
-<a href="https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP">
-  <img width="380" src="https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP/badges/card.svg" alt="Trends MCP on Glama">
-</a>
-
 </div>
 
 ```
