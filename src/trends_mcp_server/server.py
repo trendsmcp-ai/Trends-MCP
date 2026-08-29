@@ -72,7 +72,7 @@ _KEYWORD_SERIES = (
 
 
 def _key() -> str:
-    return (os.environ.get("TRENDSMCP_API_KEY") or os.environ.get("API_KEY") or "").strip()
+    return (os.environ.get("TRENDSMCP_API_KEY") or "").strip()
 
 
 def _unwrap(raw: Any, status: int) -> Any:
