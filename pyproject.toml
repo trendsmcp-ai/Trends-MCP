@@ -3,7 +3,7 @@ requires = ["hatchling>=1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "trends-mcp"
+name = "trends-mcp-server"
 version = "1.0.7"
 description = "Stdio MCP server for Trends MCP. Forwards tool calls to api.trendsmcp.ai with your API key."
 readme = "README.md"
@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-trends-mcp = "trends_mcp_server:main"
+trends-mcp-server = "trends_mcp_server:main"
 
 [project.urls]
 Homepage = "https://trendsmcp.ai"

@@ -33,7 +33,7 @@
   "packages": [
     {
       "registryType": "pypi",
-      "identifier": "trends-mcp",
+      "identifier": "trends-mcp-server",
       "version": "1.0.7",
       "runtimeHint": "uvx",
       "transport": {
