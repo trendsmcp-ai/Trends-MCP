@@ -1,5 +1,7 @@
 <div align="center">
 
+<!-- mcp-name: ai.trendsmcp/trends -->
+
 <img src="https://www.trendsmcp.ai/static/pages/trendsmcp/assets/trend.svg" width="72" alt="Trends MCP logo">
 
 # Trends MCP
@@ -60,7 +62,7 @@ Hosted MCP at `https://api.trendsmcp.ai/mcp`. Same Bearer key for `POST https://
 
 | Tool | Use when | Needs a keyword? |
 |---|---|---|
-| `get_trends` | History for one keyword on one source | Yes |
+| `get_time_series` | History for one keyword on one source | Yes |
 | `get_growth` | Percent change over 7D–5Y (several windows in one call) | Yes |
 | `get_top_trends` | What is ranking on a platform right now | No |
 
@@ -212,15 +214,15 @@ Say “using TrendsMCP” so the model picks these tools instead of web search. 
 
 Always-current parameter lists: [docs](https://www.trendsmcp.ai/docs).
 
-### `get_trends` (REST: `get_time_series`)
+### `get_time_series`
 
-Weekly (or daily) history for **one** `source` + `keyword`. MCP name stays `get_trends`. On REST prefer `mode: "get_time_series"`.
+Weekly (or daily) history for **one** `source` + `keyword`. Same name on MCP and REST (`mode: "get_time_series"`). REST also accepts `get_trends` as an alias.
 
 | Argument | Required | Notes |
 |---|---|---|
 | `keyword` | yes | Format depends on source (table below) |
 | `source` | yes | One source per call. Lowercase catalog names |
-| `data_mode` | no | `weekly` (default) or `daily` |
+| `data_mode` | no | REST only. `weekly` (default) or `daily` |
 
 Index is 0–100 where the pipeline supports it (100 = peak in the returned window). `volume` is present when that source has an absolute series.
 
@@ -230,7 +232,7 @@ Point-to-point percent change. Several windows in one call still count as **one*
 
 | Argument | Required | Notes |
 |---|---|---|
-| `keyword` | yes | Same formats as `get_trends` |
+| `keyword` | yes | Same formats as `get_time_series` |
 | `source` | yes | One source, or a comma-separated list (`google search, tiktok, amazon`) |
 | `percent_growth` | no | Default `["12M"]`. Presets below, or `{ "recent", "baseline", "name" }` date objects |
 
@@ -268,7 +270,7 @@ Using TrendsMCP, fastest-climbing Amazon best sellers in Toys Games this week.
 
 ## Keyword sources
 
-`source` on `get_trends` / `get_growth`. Not the same strings as `type` on live feeds.
+`source` on `get_time_series` / `get_growth`. Not the same strings as `type` on live feeds.
 
 | `source` | Signal | `keyword` |
 |---|---|---|
@@ -364,7 +366,7 @@ Annual billing is 20% less. Same source catalog on every plan. Free history and 
 
 One billed request:
 
-- `get_trends` / `get_time_series`: one source + keyword
+- `get_time_series`: one source + keyword
 - `get_growth`: one source + keyword (all windows in that call included)
 - `get_top_trends`: per `type` (and pagination as documented)
 
@@ -384,7 +386,7 @@ Do not commit keys. Claude.ai connectors use OAuth; other clients use `Authoriza
 
 - Region / geo breakdown, related queries, or related topics
 - Hourly series
-- `get_trends` across several sources in one call (use `get_growth` with a comma-separated `source` list, or several `get_trends` calls)
+- `get_time_series` across several sources in one call (use `get_growth` with a comma-separated `source` list, or several `get_time_series` calls)
 - Inventing feed names: MCP `type` must match the table
 
 ---

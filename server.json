@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.trendsmcp/trends",
   "title": "Trends MCP",
-  "description": "Live cross-platform trend data for AI: Google, TikTok, Reddit, Amazon, YouTube and more",
+  "description": "Live trend data for AI agents from 25+ platforms: Google, TikTok, YouTube, Reddit, Amazon and more",
   "version": "1.0.7",
   "websiteUrl": "https://trendsmcp.ai",
   "repository": {
@@ -26,6 +26,26 @@
           "description": "Bearer token. Get your free API key at https://trendsmcp.ai",
           "isRequired": true,
           "isSecret": true
+        }
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "trends-mcp",
+      "version": "1.0.7",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "TRENDSMCP_API_KEY",
+          "description": "Your Trends MCP API key. Get a free key at https://trendsmcp.ai/account (100 requests/month, no credit card).",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
         }
       ]
     }
