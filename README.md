@@ -8,6 +8,7 @@
 
 Live trend data for AI agents. Google, TikTok, YouTube, Amazon, Reddit, and 30+ other sources. One MCP connection, one API key.
 
+[![PyPI](https://img.shields.io/pypi/v/trends-mcp-server)](https://pypi.org/project/trends-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![CI](https://github.com/trendsmcp-ai/Trends-MCP/actions/workflows/ci.yml/badge.svg)](https://github.com/trendsmcp-ai/Trends-MCP/actions/workflows/ci.yml)
 [![MCP](https://img.shields.io/badge/MCP-remote%20%2B%20stdio-blue)](https://modelcontextprotocol.io)
