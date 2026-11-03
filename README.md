@@ -6,7 +6,7 @@
 
 # Trends MCP
 
-Live trend data for AI agents. Google, TikTok, YouTube, Amazon, Reddit, and 30+ other sources. One MCP connection, one API key.
+Live trend data for AI agents: 53 data sets from 27 platforms, including Google, TikTok, YouTube, Amazon, Reddit, Pinterest, Instagram and X. One MCP connection, one API key.
 
 [![PyPI](https://img.shields.io/pypi/v/trends-mcp-server)](https://pypi.org/project/trends-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -15,7 +15,7 @@ Live trend data for AI agents. Google, TikTok, YouTube, Amazon, Reddit, and 30+ 
 [![Free tier](https://img.shields.io/badge/Free-100%20req%2Fmo-orange)](https://www.trendsmcp.ai/pricing)
 [![Glama](https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP/badges/score.svg)](https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP)
 
-[Get a free API key](https://www.trendsmcp.ai/account) · [Docs](https://www.trendsmcp.ai/docs) · [Pricing](https://www.trendsmcp.ai/pricing) · [Data sources](https://www.trendsmcp.ai/data-sources) · [PyPI](https://pypi.org/project/trends-mcp-server/) · [Glama](https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP)
+[Get a free API key](https://www.trendsmcp.ai/account) · [Docs](https://www.trendsmcp.ai/docs) · [Pricing](https://www.trendsmcp.ai/pricing) · [Data catalog](https://www.trendsmcp.ai/data-catalog) · [PyPI](https://pypi.org/project/trends-mcp-server/) · [Glama](https://glama.ai/mcp/servers/trendsmcp-ai/Trends-MCP)
 
 </div>
 
@@ -27,7 +27,7 @@ Agent: Google Search  +84%
        Amazon         +61%
 ```
 
-Three tools. Normalized 0–100 where the pipeline supports it. No per-platform keys. No scraping on your side.
+5 tools plus a free usage check. History, growth, live boards, and what people are saying right now. Normalized 0–100 where the source supports it. No per-platform keys. No scraping on your side.
 
 ## Quick install
 
@@ -44,12 +44,12 @@ Same four clients as the site hero. [Get a free key](https://www.trendsmcp.ai/ac
 |---|---|
 | **Claude** | Connector name and URL are prefilled (`https://www.trendsmcp.ai/mcp`). Confirm, then authorize. |
 | **Cursor** | Approve the MCP install. Replace `YOUR_API_KEY` if prompted. |
-| **ChatGPT** | Enable Developer mode (Profile → Settings → Security). Name `Trends MCP`, URL `https://www.trendsmcp.ai/mcp`, then authorize. |
+| **ChatGPT** | In ChatGPT on the web: Plugins → + → Add custom MCP server. URL `https://www.trendsmcp.ai/mcp`, authentication OAuth, then create, install and sign in. |
 | **VS Code** | Sign in on the account page and use the **VS Code** button so the key is included. |
 
 Then ask: `Using TrendsMCP, what's trending on Google right now?`
 
-**[Tools](#tools)** · **[Sources](#keyword-sources)** · **[Feeds](#live-feeds)** · **[REST](#rest-api)** · **[Install in other clients](#install-in-other-clients)**
+**[Tools](#tools)** · **[Sources](#keyword-sources)** · **[Boards](#live-boards)** · **[REST](#rest-api)** · **[Install in other clients](#install-in-other-clients)**
 
 ---
 
@@ -57,11 +57,16 @@ Then ask: `Using TrendsMCP, what's trending on Google right now?`
 
 Hosted MCP at `https://api.trendsmcp.ai/mcp`. Same Bearer key for `POST https://api.trendsmcp.ai/api`. This repo also has a stdio adapter for Glama and local hosts.
 
-| Tool | Use when | Needs a keyword? |
+| Tool | What it does | Cost |
 |---|---|---|
-| `get_time_series` | History for one keyword on one source | Yes |
-| `get_growth` | Percent change over 7D–5Y (several windows in one call) | Yes |
-| `get_top_trends` | What is ranking on a platform right now | No |
+| `get_time_series` | Full history for one topic. About five years of weekly history for one keyword on one source, as a 0 to 100 index plus volume where the source has it. | 1 request per call |
+| `get_growth` | How fast something is rising. Point-to-point growth over one or more windows, on one source or several in the same call. | 1 request per call, every window included |
+| `get_top_trends` | What's moving right now. A live ranked board with no keyword: the current leaders, or the biggest climbers against an earlier snapshot. | MCP: 1 request per 10 rows, at most 10 per call. REST: 1 request per call |
+| `get_context` | What people are saying. What people are posting, reading and betting about a keyword right now: posts, videos, stories, comments and markets from each source, with engagement. | MCP: 1 request per source, at most 5 per call. REST: one source per call, 1 request |
+| `get_top_posts` | Top posts for one hashtag. Live top posts for one hashtag, fetched on every call. Business plan. | 1 request per call |
+| `get_usage` | Your plan, requests used and left, reset date. MCP only. | Free |
+
+`get_top_posts` is on the Business plan. Every other tool works on every plan, Free included.
 
 ---
 
@@ -179,7 +184,7 @@ Settings → Connectors → add `https://www.trendsmcp.ai/mcp`. This path uses O
 <details>
 <summary>Stdio (this repo / Glama)</summary>
 
-Hosted HTTP is still the product default. This process lists tools with no key; paid calls need `TRENDSMCP_API_KEY` and bill the same quota.
+Hosted HTTP is the product default and has every tool. This stdio adapter exposes `get_time_series`, `get_growth` and `get_top_trends`; use the hosted server for `get_context`, `get_top_posts` and `get_usage`. It lists tools with no key; calls need `TRENDSMCP_API_KEY` and bill the same quota.
 
 ```bash
 pip install -e .
@@ -209,44 +214,75 @@ Say “using TrendsMCP” so the model picks these tools instead of web search. 
 
 ## Tools
 
-Always-current parameter lists: [docs](https://www.trendsmcp.ai/docs).
+Always-current parameter lists: [docs](https://www.trendsmcp.ai/docs) and [data catalog](https://www.trendsmcp.ai/data-catalog.md). Same names on MCP and REST (`"mode": "<tool>"`).
 
 ### `get_time_series`
 
-Weekly (or daily) history for **one** `source` + `keyword`. Same name on MCP and REST (`mode: "get_time_series"`). REST also accepts `get_trends` as an alias.
+About five years of weekly history for **one** `source` + `keyword`, as a 0–100 index plus volume where the source has it.
 
 | Argument | Required | Notes |
 |---|---|---|
-| `keyword` | yes | Format depends on source (table below) |
-| `source` | yes | One source per call. Lowercase catalog names |
-| `data_mode` | no | REST only. `weekly` (default) or `daily` |
-
-Index is 0–100 where the pipeline supports it (100 = peak in the returned window). `volume` is present when that source has an absolute series.
+| `keyword` | yes | Format depends on source ([table below](#keyword-sources)) |
+| `source` | yes | Exactly one keyword source |
+| `country` | no | ISO code (`US`, `GB`, `JP`) on Google, YouTube, TikTok and Pinterest sources. Google defaults to worldwide |
+| `resolution` | no | Google and YouTube sources: `weekly` (about 5 years, default) or `daily` (last 90 days) |
+| `language` | no | Wikipedia edition (`en`, `de`, `ja`). Default `en` |
 
 ### `get_growth`
 
-Point-to-point percent change. Several windows in one call still count as **one** request for that source + keyword.
+Point-to-point percent change. Several windows in one call still count as **one** request.
 
 | Argument | Required | Notes |
 |---|---|---|
 | `keyword` | yes | Same formats as `get_time_series` |
-| `source` | yes | One source, or a comma-separated list (`google search, tiktok, amazon`) |
-| `percent_growth` | no | Default `["12M"]`. Presets below, or `{ "recent", "baseline", "name" }` date objects |
+| `source` | yes | One source, or several separated by commas (`Google Search, TikTok, Amazon`) |
+| `percent_growth` | no | Default `["12M"]`. Presets below, or a custom date-range object (REST) |
 
-Presets: `7D` `14D` `30D` `1M` `2M` `3M` `6M` `9M` `12M` `1Y` `18M` `24M` `2Y` `36M` `3Y` `48M` `60M` `5Y` `MTD` `QTD` `YTD`.
+Any number with D, W, M or Y up to 5 years, plus `MTD` `QTD` `YTD`. Common: `7D` `1W` `14D` `2W` `30D` `1M` `2M` `3M` `6M` `9M` `12M` `1Y` `18M` `24M` `2Y` `36M` `3Y` `48M` `4Y` `60M` `5Y` `MTD` `QTD` `YTD`.
 
 ### `get_top_trends`
 
-Live ranked list. **No keyword.** On MCP, `type` is required and must match the feed name **exactly** (including capitals). On REST, omit `type` only if you intend to pull every feed (billed per feed).
+Live ranked board. **No keyword.** `type` must match the board name exactly (including capitals).
 
-| Argument | Required on MCP | Notes |
+| Argument | Required | Notes |
 |---|---|---|
-| `type` | yes | See [live feeds](#live-feeds) |
-| `limit` | no | Default 25, max 200 |
-| `offset` | no | Pagination |
-| `category` | for some types | Amazon / Google Trends / Top Websites / Substack / TikTok hashtag category boards |
-| `sort` | no | `rank` (default) or `rank_change` |
-| `window` | no | With `sort=rank_change`: `1d` `3d` `7d` `14d` `30d` |
+| `type` | yes | See [live boards](#live-boards) |
+| `limit` | no | 1 to 200. Default 25 |
+| `offset` | no | Rows to skip |
+| `sort` | no | `rank` (default) or `rank_change` for climbers |
+| `window` | no | With `rank_change`: `1d` `3d` `7d` `14d` `30d`. Default `30d` |
+| `category` | for some types | The `by Category` boards and Top Websites. Names in the [data catalog](https://www.trendsmcp.ai/data-catalog.md) |
+| `country` | no | Google Trends, Pinterest, TikTok hashtags, X and YouTube boards. Default `US` |
+
+MCP bills 1 request per 10 rows (at most 10 per call). REST bills 1 request per call. Free plan: top 10, about 24 hours behind.
+
+### `get_context`
+
+What people are posting, reading and betting about a keyword right now: posts, videos, stories, comments and markets, with engagement.
+
+| Argument | Required | Notes |
+|---|---|---|
+| `keyword` | yes | Any name or phrase |
+| `source` | yes | One source, or up to 5 separated by commas (MCP). REST: one per call |
+| `days` | no | Look back 1 to 30 days. Default 7 |
+| `limit` | no | Items per source, 1 to 20. Default 10 |
+| `comments` | no | Top comments for the first N items (0 to 5, default 2) |
+
+Sources: `News`, `YouTube`, `TikTok`, `Instagram`, `X`, `Reddit`, `Bluesky`, `Hacker News`, `Polymarket`, `GitHub`. MCP bills 1 request per source.
+
+### `get_top_posts`
+
+Live top posts for one hashtag, fetched on every call. **Business plan.** 1 request per call.
+
+| Argument | Required | Notes |
+|---|---|---|
+| `keyword` | yes | The hashtag, with or without `#` |
+| `source` | yes | `TikTok` or `Instagram` |
+| `limit` | no | 1 to 20. Default 20 |
+
+### `get_usage`
+
+Free, MCP only. Your plan, requests used and left this month, and the reset date.
 
 ---
 
@@ -254,11 +290,11 @@ Live ranked list. **No keyword.** On MCP, `type` is required and must match the 
 
 ```
 Using TrendsMCP, what's trending on Google right now?
-Using TrendsMCP, what are the hottest Reddit posts right now?
+Using TrendsMCP, why is Clayface trending? Show me the posts and stories behind it.
 Using TrendsMCP, compare 6-month growth for creatine gummies on Google, TikTok, and Amazon.
 Using TrendsMCP, show Google Search history for protein soda.
 Via TrendsMCP, pull npm download history for langchain.
-Using TrendsMCP, show Steam concurrent players for Elden Ring.
+Using TrendsMCP, what are people saying about the Nintendo Switch 2 on Reddit and YouTube?
 Via TrendsMCP, Android downloads for com.openai.chatgpt.
 Using TrendsMCP, fastest-climbing Amazon best sellers in Toys Games this week.
 ```
@@ -267,62 +303,54 @@ Using TrendsMCP, fastest-climbing Amazon best sellers in Toys Games this week.
 
 ## Keyword sources
 
-`source` on `get_time_series` / `get_growth`. Not the same strings as `type` on live feeds.
+`source` on `get_time_series` and `get_growth` (14).
 
-| `source` | Signal | `keyword` |
+| `source` | Pass as `keyword` | Extra options |
 |---|---|---|
-| `google search` | Search volume | Any phrase |
-| `google images` | Image search volume | Any phrase |
-| `google news` | News-tab volume | Any phrase |
-| `google shopping` | Shopping-tab volume | Any phrase |
-| `youtube` | YouTube search volume | Any phrase |
-| `tiktok` | Hashtag volume | Hashtag or topic (`#` optional) |
-| `reddit` | Subreddit attention | Name only, no `r/` |
-| `amazon` | Product search volume | Product or category |
-| `wikipedia` | Page views | Article title or topic |
-| `news volume` | Mention volume | Any phrase |
-| `news sentiment` | News tone | Any phrase |
-| `app downloads` | Android downloads | Play bundle id, e.g. `com.openai.chatgpt` |
-| `app rankings` | Android chart position | Bundle id |
-| `npm` | Weekly downloads | Exact package name (`react`, `@babel/core`) |
-| `steam` | Monthly concurrent players | Game display name (`Elden Ring`) |
+| `Google Search` | Any name or phrase, e.g. `electric vehicles` | `country`, `resolution` |
+| `Google Images` | Any name or phrase, e.g. `electric vehicles` | `country`, `resolution` |
+| `Google News` | Any name or phrase, e.g. `electric vehicles` | `country`, `resolution` |
+| `Google Shopping` | Any name or phrase, e.g. `running shoes` | `country`, `resolution` |
+| `YouTube` | Any name or phrase, e.g. `stanley cup` | `country`, `resolution` |
+| `Wikipedia` | Any name or phrase, e.g. `Bitcoin` | `language` |
+| `TikTok` | Any name or phrase, e.g. `booktok` | `country` |
+| `Amazon` | Any name or phrase, e.g. `air fryer` | - |
+| `Pinterest` | Any name or phrase, e.g. `matcha` | `country` |
+| `npm` | Exact npmjs.com package name, case-sensitive, e.g. `langchain` | - |
+| `Python` | Exact PyPI project name, e.g. `pandas` | - |
+| `Steam` | Game display name in plain English, not a Steam App ID, e.g. `Elden Ring` | - |
+| `App Downloads` | Android bundle ID only (the id= value on Google Play), e.g. `com.openai.chatgpt` | - |
+| `App Rankings` | Android bundle ID only (the id= value on Google Play), e.g. `com.openai.chatgpt` | - |
 
-`source: "Google Trends"` is invalid. Use `google search` for history and `type: "Google Trends"` for the live board.
+`source: "Google Trends"` is invalid. Use `Google Search` for history and `type: "Google Trends"` for the live board.
 
 ---
 
-## Live feeds
+## Live boards
 
-`type` on `get_top_trends`. Copy the name exactly.
+`type` on `get_top_trends` (27). Copy the name exactly.
 
-| `type` | Board |
-|---|---|
-| `Google Trends` | Google searches now |
-| `Google Trends by Category` | Needs `category` (e.g. `Games`) |
-| `Google News Top News` | Google News stories |
-| `TikTok Trending Hashtags` | Hashtags |
-| `TikTok Trending Hashtags by Category` | Needs `category` |
-| `TikTok Trending Searches` | In-app searches |
-| `YouTube Trending` | Videos |
-| `X (Twitter) Trending` | Topics on X |
-| `Reddit Hot Posts` | Front page |
-| `Reddit World News` | r/worldnews |
-| `Wikipedia Trending` | Most-viewed articles |
-| `Amazon Best Sellers Top Rated` | Top-rated sellers |
-| `Amazon Best Sellers by Category` | Needs `category` (e.g. `Toys Games`) |
-| `App Store Top Free` / `App Store Top Paid` | iOS charts |
-| `Google Play` | Play chart |
-| `Top Websites` | Global traffic rank; optional `category` |
-| `Spotify Top Podcasts` | Podcasts |
-| `Steam Most Played` | Live players |
-| `Substack` / `Substack by Category` | Newsletters |
-| `GitHub` | Daily trending repos |
-| `IMDb MOVIEmeter` | Movie activity |
-| `Open Library Trending Books` | Books |
+- **Amazon:** `Amazon Best Sellers Top Rated`, `Amazon Best Sellers by Category`
+- **App Store:** `App Store Top Free`, `App Store Top Paid`
+- **GitHub:** `GitHub`
+- **Google News:** `Google News Top News`
+- **Google Play:** `Google Play`
+- **Google Trends:** `Google Trends`, `Google Trends by Category`
+- **IMDb:** `IMDb MOVIEmeter`
+- **Open Library:** `Open Library Trending Books`
+- **Pinterest:** `Pinterest Trending`, `Pinterest Trending by Category`
+- **Polymarket:** `Polymarket Top Markets`
+- **Reddit:** `Reddit Hot Posts`, `Reddit World News`
+- **Web:** `Top Websites`
+- **Spotify:** `Spotify Top Podcasts`
+- **Steam:** `Steam Most Played`
+- **Substack:** `Substack`, `Substack by Category`
+- **TikTok:** `TikTok Trending Hashtags`, `TikTok Trending Hashtags by Category`, `TikTok Trending Searches`
+- **Wikipedia:** `Wikipedia Trending`
+- **X:** `X (Twitter) Trending`
+- **YouTube:** `YouTube Trending`
 
-Category name lists: [docs](https://www.trendsmcp.ai/docs).
-
-iOS charts, GitHub repos, Spotify, IMDb, Open Library, Substack, and Top Websites are **feeds**, not `source` values. There is no `source: "web traffic"`.
+Category names per board: [data catalog](https://www.trendsmcp.ai/data-catalog.md).
 
 ---
 
@@ -352,39 +380,47 @@ Python client: [`pip install trendsmcp`](https://pypi.org/project/trendsmcp/).
 
 ## Limits and errors
 
-| Plan | Requests / month | Price |
-|---|---|---|
-| Free | 100 | $0 |
-| Starter | 1,000 | $19 |
-| Pro | 5,000 | $49 |
-| Business | 25,000 | $199 |
+| Plan | Requests / month | Top trends rows | Price / month |
+|---|---|---|---|
+| Free | 100 | Top 10, 24h delay | $0 |
+| Starter | 1,000 | Top 25 | $19 |
+| Pro | 5,000 | Top 100 | $49 |
+| Business | 25,000 | Full board | $199 |
 
-Annual billing is 20% less. Same source catalog on every plan. Free history and “top N” caps are on [pricing](https://www.trendsmcp.ai/pricing). Failed calls are not billed. Over quota returns `429` / `rate_limited` (no surprise overages).
+Yearly billing: Starter $16/mo, Pro $39/mo, Business $159/mo. Every plan reads every data set; Top Posts is on Business. Failed calls are free.
 
-One billed request:
+**Pay as you go:** one-time credit packs, no subscription ($15 for 600, $49 for 2,500, $199 for 12,000 credits). 1 credit = 1 request. Credits never expire and are used after a plan's monthly requests run out. [Pricing](https://www.trendsmcp.ai/pricing).
+
+What one request is:
 
 - `get_time_series`: one source + keyword
-- `get_growth`: one source + keyword (all windows in that call included)
-- `get_top_trends`: per `type` (and pagination as documented)
+- `get_growth`: one keyword, every window in the call included
+- `get_top_trends`: MCP 1 per 10 rows (max 10 per call); REST 1 per call
+- `get_context`: MCP 1 per source (max 5 per call); REST one source per call
+- `get_top_posts`: 1 per call
+- `get_usage`: free
 
 | Status | Meaning |
 |---|---|
-| 400 | Bad or missing `source` / `type` / field |
-| 401 | Missing or invalid key |
-| 404 | No series for that keyword + source |
-| 429 | Monthly cap |
-| 500 | Upstream or internal error |
+| 400 | Bad or missing `source` / `type` / field, or no growth window could be calculated |
+| 401 | Missing key (HTTP) |
+| 403 | Invalid key (HTTP), or the tool needs a higher plan (`plan_required`) |
+| 404 | No data for that keyword + source |
+| 502 | Upstream source did not answer (`source_unavailable`) |
+| 500 | Internal error (body has a `request_id`) |
 
-Do not commit keys. Claude.ai connectors use OAuth; other clients use `Authorization: Bearer …`.
+When the monthly requests are used up and no credits are left, calls are refused with `monthly_limit_reached` and a link to buy credits or upgrade. Over MCP, `get_usage` shows what is left.
+
+Full error codes: [docs](https://www.trendsmcp.ai/docs.md). Do not commit keys. Claude.ai and ChatGPT connectors use OAuth; other clients use `Authorization: Bearer …`.
 
 ---
 
 ## What this does not do
 
-- Region / geo breakdown, related queries, or related topics
-- Hourly series
+- Related queries or related topics
+- Hourly series (Google and YouTube go down to daily for the last 90 days)
 - `get_time_series` across several sources in one call (use `get_growth` with a comma-separated `source` list, or several `get_time_series` calls)
-- Inventing feed names: MCP `type` must match the table
+- Inventing board names: `type` must match the table
 
 ---
 
@@ -405,6 +441,6 @@ CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Security: [SECURITY.
 - [Docs](https://www.trendsmcp.ai/docs)
 - [Pricing](https://www.trendsmcp.ai/pricing)
 - [llms.txt](https://www.trendsmcp.ai/llms.txt)
-- [TrendWatch](https://github.com/trendsmcp/TrendWatch) (alerts in your own GitHub repo)
+- [TrendWatch](https://github.com/trendsmcp-ai/TrendWatch) (alerts in your own GitHub repo)
 
 MIT © [Trends MCP](https://www.trendsmcp.ai)
